@@ -3,15 +3,15 @@
 
 // 기본 생성자
 Movie::Movie()
-    : id(0), releaseYear(0),
-      totalRating(0.0), ratingCount(0) {}
+    : id(0), releaseYear(0),totalRating(0.0), ratingCount(0) {}
 
 // 4인자 생성자
-Movie::Movie(int id, const std::string& title,
-             const std::string& genre, int year)
-    : id(id), title(title), genre(genre),
-      releaseYear(year),
-      totalRating(0.0), ratingCount(0) {}
+Movie::Movie(int id, const std::string& title,const std::string& genre, int year)
+    : id(id), title(title), genre(genre),releaseYear(year),totalRating(0.0), ratingCount(0) {
+         
+        set ReleaseYear(releaseYear);
+
+        }
 
 int         Movie::getId()           const { return id; }
 std::string Movie::getTitle()        const { return title; }

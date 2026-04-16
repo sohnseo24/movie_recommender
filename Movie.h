@@ -13,15 +13,16 @@ private:
 public:
     Movie();                    // 기본 생성자 추가
     Movie(int id, const std::string& title,
-          const std::string& genre, int year);
-
+          const std::string& genre, int releaseYear);
+    //getter함수들
     int         getId()              const;
     std::string getTitle()           const;
     std::string getGenre()           const;
     int         getReleaseYear()     const;  // getYear → getReleaseYear
     double      getAverageRating()   const;  // getRating → getAverageRating
     int         getRatingCount()     const;  // 추가
-
+    //setter함수들
+    int setReleaseYear(releaseYear)  const;
     void addRating(double r);               // 추가
     void display()               const;
 };
