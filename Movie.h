@@ -22,7 +22,8 @@ public:
     double      getAverageRating()   const;  // getRating → getAverageRating
     int         getRatingCount()     const;  // 추가
     //setter함수들
-    int setReleaseYear(releaseYear)  const;
+    void setReleaseYear(int releaseYear);
+
     void addRating(double r);               // 추가
     void display()               const;
 };
