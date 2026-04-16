@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <iostream>
 
 class Movie {
 private:
@@ -7,23 +8,31 @@ private:
     std::string title;
     std::string genre;
     int         releaseYear;
-    double      totalRating;    // averageRating 제거
-    int         ratingCount;    // 추가
+    double      totalRating;
+    int         ratingCount;
 
 public:
-    Movie();                    // 기본 생성자 추가
+    Movie();
     Movie(int id, const std::string& title,
           const std::string& genre, int releaseYear);
-    //getter함수들
+
+    // getter함수들
     int         getId()              const;
     std::string getTitle()           const;
     std::string getGenre()           const;
-    int         getReleaseYear()     const;  // getYear → getReleaseYear
-    double      getAverageRating()   const;  // getRating → getAverageRating
-    int         getRatingCount()     const;  // 추가
-    //setter함수들
-    void setReleaseYear(int releaseYear);
+    int         getReleaseYear()     const;
+    double      getAverageRating()   const;
+    int         getRatingCount()     const;
 
-    void addRating(double r);               // 추가
-    void display()               const;
+    // 연산자 오버로딩 선언 (구현은 cpp로 이동)
+    bool operator<(const Movie& other) const;
+    bool operator==(const std::string& searchTitle) const;
+    
+    // friend 함수는 클래스 내부에서 선언만 함
+    friend std::ostream& operator<<(std::ostream& os, const Movie& m);
+
+    // setter 및 기능 함수들
+    void setReleaseYear(int releaseYear);
+    void addRating(double r);
+    void display() const;
 };
