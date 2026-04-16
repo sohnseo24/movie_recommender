@@ -5,7 +5,7 @@
 
 class UserManager {
 private:
-    std::vector<User> users; // 데이터 캡슐화
+    std::vector<User> users; 
 
 public:
     // 5번: 사용자 추가

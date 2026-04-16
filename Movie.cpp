@@ -1,7 +1,7 @@
 #include "Movie.h"
 #include <iostream>
 
-// 기본 생성자: 멤버 이니셜라이저 리스트 사용
+// 기본 생성자
 Movie::Movie()
     : id(0), title(""), genre(""), releaseYear(0), totalRating(0.0), ratingCount(0) {}
 
@@ -21,7 +21,7 @@ double Movie::getAverageRating() const {
     return totalRating / ratingCount;
 }
 
-// [엄격한 분리] 연산자 오버로딩 구현
+// 연산자 오버로딩 구현
 bool Movie::operator<(const Movie& other) const {
     return this->id < other.id;
 }
@@ -51,6 +51,5 @@ void Movie::addRating(double r) {
 }
 
 void Movie::display() const {
-    // 위에서 만든 operator<< 를 호출하여 출력 (코드 재사용)
     std::cout << *this << " (" << ratingCount << "건)" << std::endl;
 }
