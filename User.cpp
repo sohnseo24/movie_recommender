@@ -1,20 +1,28 @@
 #include "User.h"
 #include <iostream>
 
-// 기본 생성자
 User::User()
     : id(0), name(""), email("") {}
 
-// 3인자 생성자
 User::User(int id, const std::string& name, const std::string& email)
-    :id(id), name(name), email(email){}
+    : id(id), name(name), email(email) {}
 
-int         User::getId()           const { return id; }
-std::string User::getName()         const { return name; }
-std::string User::getEmail()        const { return email;}
+int         User::getId()    const { return id; }
+std::string User::getName()  const { return name; }
+std::string User::getEmail() const { return email; }
 
-void User::display() const {           // 중복 제거 — 하나만 유지
-    std::cout << "Id: "<< id << std::endl
-    << "Name: " << name << std::endl
-    << "Email: " << email << std::endl;
+// [추가] 이름 비교 연산자 구현
+bool User::operator==(const std::string& userName) const {
+    return this->name == userName;
+}
+
+// [추가] 출력 연산자 구현
+std::ostream& operator<<(std::ostream& os, const User& u) {
+    os << "ID: " << u.id << " | Name: " << u.name << " | Email: " << u.email;
+    return os;
+}
+
+void User::display() const {
+    // operator<< 를 재사용하여 출력
+    std::cout << *this << std::endl;
 }
