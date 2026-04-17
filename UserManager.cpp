@@ -20,7 +20,7 @@ void UserManager::printAllUsers() const {
 // 반복문을 이용한 사용자 이름 검색
 User* UserManager::findByName(const std::string& name) {
     // 벡터를 처음부터 끝까지 돌면서 이름을 비교
-    for (int i = 0; i < users.size(); i++) {
+    for (size_t i = 0; i < users.size(); i++) {
         if (users[i].getName() == name) {
             return &users[i]; // 찾으면 해당 사용자의 주소 즉 포인터 반환
         }
