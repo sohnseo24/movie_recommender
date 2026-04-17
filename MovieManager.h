@@ -9,4 +9,5 @@ private:
 public:
     void addMovie(const Movie& m);
     void printAllMovies() const;
+    void sortByRating(); // 평점순 정렬 함수
 };
