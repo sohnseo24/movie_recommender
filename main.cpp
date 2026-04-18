@@ -1,38 +1,81 @@
 #include <iostream>
-#include <vector>
-#include "Movie.h"
-#include "User.h"
-#include "Rating.h"
+#include <string>
+#include "MovieManager.h"
+#include "UserManager.h"
+#include "RatingManager.h"
+
+using namespace std;
+
+// 메뉴판 출력 함수
+void printMenu() {
+    cout << "\n=== Movie Recommender ===" << endl;
+    cout << "[ 영화 ]" << endl;
+    cout << "1. 영화 추가" << endl;
+    cout << "2. 제목으로 검색" << endl;
+    cout << "3. 전체 목록 출력" << endl;
+    cout << "4. 평점순 정렬 출력" << endl;
+    cout << "\n[ 사용자 ]" << endl;
+    cout << "5. 사용자 추가" << endl;
+    cout << "6. 사용자 목록 출력" << endl;
+    cout << "\n[ 평점 ]" << endl;
+    cout << "7. 평점 입력" << endl;
+    cout << "8. 영화별 평점 보기" << endl;
+    cout << "\n0. 종료" << endl;
+    cout << "선택 > ";
+}
 
 int main() {
-    //1. Movie객체들을 vector에 담음
-    std::vector <Movie> movies;
-    movies.push_back(Movie(1,"기생충", "드라마", 2019));
-    movies.push_back(Movie(2,"인셉션", "SF", 2010));
+    MovieManager movieMgr;
+    UserManager userMgr;
+    RatingManager ratingMgr;
 
-    //2. User 객체 생성
-    User u1(1,"손서영","sohnseo24@gmail.com");
-    
-    //3. Rating 객체생성, 유효성 검사 포함함
-    Rating r1(1,1,4.8); //정상
-    Rating r2(1,2,9.9); //유효성 검사로 인해 0.0 처리됨
+    int choice;
 
-    //4. 결과 출력
-    std::cout << "영화 목록 (vector)" <<std::endl;
-    for (const auto& m : movies){
-        m.display();
+    while (true) {
+        printMenu();
+        cin >> choice;
+
+        if (choice == 0) {
+            cout << "프로그램을 종료합니다." << endl;
+            break;
+        }
+
+        switch (choice) {
+            case 1: { //1번: 영화 추가
+                int id, year;
+                string title, genre;
+                cout << "영화 ID: "; 
+                cin >> id;
+                cout << "제목: "; getline(cin, title);
+                cout << "장르: "; getline(cin, genre);
+                cout << "개봉연도: "; cin >> year;
+                movieMgr.addMovie(Movie(id, title, genre, year));
+                break;
+            }
+            case 2: { //2번: 제목으로 검색
+                string title;
+                cout << "검색할 제목: ";
+                getline(cin, title);
+                
+                // MovieManager에서 만든 포인터 반환 함수 사용
+                Movie* found = movieMgr.findByTitle(title);
+                if (found != nullptr) {
+                    cout << "\n[검색 결과]" << endl;
+                    cout << *found << endl; // operator<< 오버로딩 활용
+                } else {
+                    cout << "해당 제목의 영화를 찾을 수 없습니다." << endl;
+                }
+                break;
+            }
+            case 3: // 3번: 전체 목록 출력
+                movieMgr.printAllMovies();
+                break;
+            case 4: //4번: 평점순 정렬 출력
+                movieMgr.sortByRating();
+                movieMgr.printAllMovies();
+                break;
+        }
     }
-    std::cout<<"\n사용자 정보"<<std::endl;
-    u1.display();
-
-    std::cout<<"\n평점 기록"<<std::endl;
-    r1.display();
-    r2.display();
 
     return 0;
-    }
-
-
-
-
-    
+}
