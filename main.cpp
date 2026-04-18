@@ -46,6 +46,7 @@ int main() {
                 string title, genre;
                 cout << "영화 ID: "; 
                 cin >> id;
+                cin.ignore(); //오류 해결: 정수 입력 후 남은 엔터를 제거하여 getline이 정상 작동하게 함
                 cout << "제목: "; getline(cin, title);
                 cout << "장르: "; getline(cin, genre);
                 cout << "개봉연도: "; cin >> year;
@@ -55,6 +56,7 @@ int main() {
             case 2: { //2번: 제목으로 검색
                 string title;
                 cout << "검색할 제목: ";
+                cin.ignore(); //오류 해결: 메뉴 선택 시 입력한 엔터를 제거
                 getline(cin, title);
                 
                 // MovieManager에서 만든 포인터 반환 함수 사용
