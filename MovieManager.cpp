@@ -3,10 +3,10 @@
 #include <algorithm>
 
 void MovieManager::addMovie(const Movie& m) {
-    movies.push_back(m); 
+    movies.push_back(m); //메모리 자동관리 , 동적 크기 조절을 위해 
 }
 
-void MovieManager::printAllMovies() const {
+void MovieManager::printAllMovies() const { 
     if (movies.empty()) {
         std::cout << "현재 등록된 영화가 없습니다." << std::endl;
         return;

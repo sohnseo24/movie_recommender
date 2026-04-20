@@ -2,6 +2,7 @@
 #include <iostream>
 
 void RatingManager::addRating(const Rating& r) {
+    ratings.push_back(r);
 }
 
 
