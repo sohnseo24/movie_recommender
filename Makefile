@@ -1,42 +1,33 @@
-# Makefile — Movie Recommender 
 CXX      = g++
-CXXFLAGS = -std=c++17 -Wall -g
-
-#movie_recommender로 변경
+CXXFLAGS = -std=c++17 -Wall -g -Iinclude
 TARGET   = movie_recommender
-OBJS     = main.o Movie.o User.o Rating.o MovieManager.o UserManager.o RatingManager.o
+SRCDIR   = src
+OBJDIR   = obj
+
+OBJS = $(OBJDIR)/main.o \
+       $(OBJDIR)/Movie.o \
+       $(OBJDIR)/User.o \
+       $(OBJDIR)/Rating.o \
+       $(OBJDIR)/MovieManager.o \
+       $(OBJDIR)/UserManager.o \
+       $(OBJDIR)/RatingManager.o \
+       $(OBJDIR)/SimilarityCalculator.o
+
+all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-main.o: main.cpp Movie.h User.h Rating.h MovieManager.h UserManager.h RatingManager.h
-	$(CXX) $(CXXFLAGS) -c $<
-
-Movie.o: Movie.cpp Movie.h
-	$(CXX) $(CXXFLAGS) -c $<
-
-User.o: User.cpp User.h
-	$(CXX) $(CXXFLAGS) -c $<
-
-Rating.o: Rating.cpp Rating.h
-	$(CXX) $(CXXFLAGS) -c $<
-
-MovieManager.o: MovieManager.cpp MovieManager.h Movie.h
-	$(CXX) $(CXXFLAGS) -c $<
-
-UserManager.o: UserManager.cpp UserManager.h User.h
-	$(CXX) $(CXXFLAGS) -c $<
-
-
-RatingManager.o: RatingManager.cpp RatingManager.h Rating.h
-	$(CXX) $(CXXFLAGS) -c $<
-
-.PHONY: clean run
-
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -rf $(OBJDIR) $(TARGET)
 
 run: $(TARGET)
 	./$(TARGET)
+
+.PHONY: all clean run

@@ -15,6 +15,7 @@ public:
     Movie();
     Movie(int id, const std::string& title,
           const std::string& genre, int releaseYear);
+    Movie(int id, const std::string& title, int releaseYear, double rating);//CSV로딩용 생성자 추가(개봉연도와 평점을 받는 생성자 추가)
 
     // getter함수들
     int         getId()              const;

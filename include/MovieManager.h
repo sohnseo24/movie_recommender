@@ -11,5 +11,6 @@ public:
     void printAllMovies() const;//3번: 전체 목록 출력
     void sortByRating(); // 4번: 평점순 정렬 출력
     Movie* findByTitle(const std::string& title); //2번: 제목으로 검색
+    void MovieManager::loadMovies(const std::string& filename);
 };
 

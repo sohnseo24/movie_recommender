@@ -1,6 +1,11 @@
+#include "Movie.h"
 #include "MovieManager.h"
 #include <iostream>
 #include <algorithm>
+#include <fstream>   // ifstream 사용을 위해
+#include <sstream>   // stringstream 사용을 위해
+#include <string>    // string, stoi, stod 사용을 위해
+using namespace std;
 
 void MovieManager::addMovie(const Movie& m) {
     movies.push_back(m); //메모리 자동관리 , 동적 크기 조절을 위해 
@@ -38,4 +43,30 @@ Movie* MovieManager::findByTitle(const std::string& title) {
         }
     }
     return nullptr; // 못 찾으면 nullptr 전달
+}
+
+void MovieManager::loadMovies(const std::string& filename) {
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error: " << filename << " 열 수 없습니다" << std::endl;
+        return;
+    }
+
+    std::string line;
+    std::getline(file, line); // 헤더 스킵
+
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string token;
+
+        std::getline(ss, token, ','); int id = std::stoi(token);
+        std::getline(ss, token, ','); std::string title = token;
+        std::getline(ss, token, ','); int year = std::stoi(token);
+        std::getline(ss, token, ','); double rating = std::stod(token);
+
+        // 핵심: 읽어온 데이터를 바로 movies 벡터에 추가!
+        movies.push_back(Movie(id, title, year, rating)); 
+    }
+    std::cout << "[알림] " << filename << " 데이터를 성공적으로 불러왔습니다." << std::endl;
 }
