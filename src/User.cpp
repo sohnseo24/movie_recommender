@@ -7,6 +7,10 @@ User::User()
 User::User(int id, const std::string& name, const std::string& email)
     : id(id), name(name), email(email) {}
 
+//CSV로딩용 생성자 추가(이름과 나이를 받는 생성자 추가)
+User::User(int id, const std::string& name, int age) 
+    : id(id), name(name), age(age) {}
+
 int         User::getId()    const { return id; }
 std::string User::getName()  const { return name; }
 std::string User::getEmail() const { return email; }

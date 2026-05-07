@@ -5,12 +5,14 @@
 class User {
 private:
     int         id;
+    int         age;
     std::string name;
     std::string email;
 
 public:
     User();
     User(int id, const std::string& name, const std::string& email);
+    User(int id, const std::string& name , int age);
 
     // Getter들
     int         getId()    const;
