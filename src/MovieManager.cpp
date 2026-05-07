@@ -45,7 +45,7 @@ Movie* MovieManager::findByTitle(const std::string& title) {
     return nullptr; // 못 찾으면 nullptr 전달
 }
 
-void MovieManager::loadMovies(const std::string& filename) {
+void MovieManager::loadMovies(const std::string& filename) { //CSV로딩을 위해 새로 추가
     std::ifstream file(filename);
 
     if (!file.is_open()) {
@@ -65,8 +65,31 @@ void MovieManager::loadMovies(const std::string& filename) {
         std::getline(ss, token, ','); int year = std::stoi(token);
         std::getline(ss, token, ','); double rating = std::stod(token);
 
-        // 핵심: 읽어온 데이터를 바로 movies 벡터에 추가!
+        //읽어온 데이터를 바로 movies 벡터에 추가!
         movies.push_back(Movie(id, title, year, rating)); 
     }
     std::cout << "[알림] " << filename << " 데이터를 성공적으로 불러왔습니다." << std::endl;
+}
+
+void MovieManager::saveMovies(const std::string& filename) const {
+    std::ofstream file(filename); // 파일 열기
+
+    if (!file.is_open()) {
+        std::cerr << "Error: " << filename << " 저장 실패" << std::endl;
+        return;
+    }
+
+    // 1. 헤더 작성
+    file << "id,title,year,rating" << std::endl;
+
+    // 2. 데이터 작성
+    for (const auto& m : movies) {
+        file << m.getId() << "," 
+             << m.getTitle() << "," 
+             << m.getReleaseYear() << "," 
+             << m.getAverageRating() << std::endl; 
+    }
+
+    file.close();
+    std::cout << "[알림] " << filename << " 저장 완료: " << movies.size() << "건" << std::endl;
 }

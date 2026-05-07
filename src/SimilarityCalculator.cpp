@@ -9,7 +9,7 @@ int SimilarityCalculator::calculate(
     int scoreDiffSum=0; //평점 차이의 합
 
     //이중 반복문: user1의 모든 평점* user2의 모든 평점
-    for(const Rating&r1: user 1){
+    for(const Rating&r1: user1){
         for(const Rating r2: user2){
             if(r1.getMovieId()==r2.getMovieId()){
                 commonCount++;
