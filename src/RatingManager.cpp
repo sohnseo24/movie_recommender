@@ -45,3 +45,24 @@ void RatingManager::loadRatings(const std::string& filename) { //CSV로딩을 �
     }
     std::cout << "[알림] " << filename << " 데이터를 성공적으로 불러왔습니다." << std::endl;
 }
+void RatingManager::saveRatings(const std::string& filename) const {
+    std::ofstream file(filename); // 파일 열기
+
+    if (!file.is_open()) {
+        std::cerr << "Error: " << filename << " 저장 실패" << std::endl;
+        return;
+    }
+
+    // 1. 헤더 작성
+    file << "userId, movieId, score" << std::endl;
+
+    // 2. 데이터 작성
+    for (const auto& m : ratings) {
+        file << m.getUserId() << "," 
+             << m.getMovieId() << "," 
+             << m.getScore() << std::endl; 
+    }
+
+    file.close();
+    std::cout << "[알림] " << filename << " 저장 완료: " << ratings.size() << "건" << std::endl;
+}
