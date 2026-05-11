@@ -79,3 +79,8 @@ void UserManager::saveUsers(const std::string& filename) const {
     file.close();
     std::cout << "[알림] " << filename << " 저장 완료: " << users.size() << "건" << std::endl;
 }
+
+//9번: 전체 사용자를 한 명씩 비교하려면 전체 리스트를 받아올 수 있어야 한다.
+const std::vector<User>& UserManager::getAllUsers() const {
+    return users;
+}

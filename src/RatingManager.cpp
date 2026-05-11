@@ -66,3 +66,13 @@ void RatingManager::saveRatings(const std::string& filename) const {
     file.close();
     std::cout << "[알림] " << filename << " 저장 완료: " << ratings.size() << "건" << std::endl;
 }
+
+std::vector<Rating> RatingManager::findByUser(int userId) const {
+    std::vector<Rating> userRatings;
+    for (const auto& r : ratings) {
+        if (r.getUserId() == userId) {
+            userRatings.push_back(r);
+        }
+    }
+    return userRatings;
+}

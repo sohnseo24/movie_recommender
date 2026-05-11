@@ -20,4 +20,7 @@ public:
     void loadUsers(const std::string& filename);//프로그램 시작시 CSV파일에서 데이터를 로드한다.
     void saveUsers(const std::string& filename) const;//프로그램 종료시 데이터를 CSV파일에 저장한다.
     //이 함수는 저장만 하고 UserManager내부 값을 바꾸지 않으므로 const를 씀
+
+    const std::vector<User>& getAllUsers() const; 
+    //9번: 전체 사용자를 한 명씩 비교하려면 전체 리스트를 받아올 수 있어야 한다.
 };
