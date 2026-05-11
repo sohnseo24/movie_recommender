@@ -12,6 +12,7 @@ User::User(int id, const std::string& name, int age)
     : id(id), name(name), age(age) {}
 
 int         User::getId()    const { return id; }
+int         User::getAge()   const {return age; }
 std::string User::getName()  const { return name; }
 std::string User::getEmail() const { return email; }
 

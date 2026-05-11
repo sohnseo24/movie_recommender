@@ -16,6 +16,7 @@ public:
 
     // Getter들
     int         getId()    const;
+    int         getAge()   const;
     std::string getName()  const;
     std::string getEmail() const;
 
