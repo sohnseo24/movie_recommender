@@ -30,6 +30,12 @@ int main() {
     UserManager userMgr;
     RatingManager ratingMgr;
 
+    //프로그램 시작 시 데이터 불러오기
+    movieMgr.loadMovies("data/movies.csv");
+    userMgr.loadUsers("data/users.csv");
+    ratingMgr.loadRatings("data/ratings.csv");
+
+
     int nextMovieId = 1;
     int nextUserId = 1;
 
@@ -137,5 +143,11 @@ int main() {
                 break;
         }
     }
+    //프로그램 종료시 데이터 저장
+    movieMgr.saveMovies("data/movies.csv");
+    userMgr.saveUsers("data/users.csv");
+    ratingMgr.saveRatings("data/ratings.csv");
+
+    std::cout << "모든 데이터가 안전하게 저장되었습니다." << std::endl;
     return 0;
 }
