@@ -4,6 +4,7 @@
 #include "MovieManager.h"
 #include "UserManager.h"
 #include "RatingManager.h"
+#include "SimilarityCalculator.h"
 
 void showMenu() {
     std::cout << "\n=== Movie Recommender ===\n";
@@ -20,6 +21,7 @@ void showMenu() {
     std::cout << "\n[ 평점 ]\n";
     std::cout << " 7. 평점 입력\n";
     std::cout << " 8. 영화별 평점 보기\n";
+    std::cout << " 9. 사용자 유사도 계산\n";
     
     std::cout << "\n 0. 종료\n";
     std::cout << "\n선택 > ";
@@ -135,6 +137,57 @@ int main() {
                     ratingMgr.printRatingsByMovie(m->getId());
                 } else { //nullptr 이라면
                     std::cout << "해당 영화를 찾을 수 없습니다.\n";
+                }
+                break;
+            }
+            case 9: {
+                std::string targetName;
+                std::cout << "유사도를 계산할 사용자 이름: ";
+                std::getline(std::cin, targetName);
+
+                // 1) 기준이 될 사용자 찾기
+                User* targetUser = userMgr.findByName(targetName);
+                if (!targetUser) {
+                    std::cout << "사용자를 찾을 수 없습니다.\n";
+                    break;
+                }
+
+                int targetId = targetUser->getId();
+                // 2) 기준 사용자의 모든 평점 기록 가져오기
+                std::vector<Rating> myRatings = ratingMgr.findByUser(targetId);
+
+                int bestUser = -1;
+                int bestSim = -101; // 초기값 (최솟값보다 작게)
+
+                // 3) 전체 사용자를 순회하며 유사도 비교
+                // userMgr에서 전체 사용자 리스트를 가져와서 반복문 돌리기
+                const std::vector<User>& allUsers = userMgr.getAllUsers(); 
+
+                for (const auto& otherUser : allUsers) {
+                    int otherId = otherUser.getId();
+                    
+                    if (otherId == targetId) continue; // 자기 자신은 제외
+
+                    // 비교할 상대방의 평점 목록 가져오기
+                    std::vector<Rating> otherRatings = ratingMgr.findByUser(otherId);
+                    
+                    // 유사도 계산기 작동
+                    int sim = SimilarityCalculator::calculate(myRatings, otherRatings);
+
+                    // 최댓값 갱신 패턴
+                    if (sim > bestSim) {
+                        bestSim = sim;
+                        bestUser = otherId;
+                    }
+                }
+
+                // 4) 결과 출력
+                if (bestUser != -1 && bestSim != -100) {
+                    std::cout << "\n[분석 결과]" << std::endl;
+                    std::cout << targetName << "님과 가장 취향이 비슷한 사용자는 User ID: " << bestUser << "입니다." << std::endl;
+                    std::cout << "(유사도 점수: " << bestSim << "점)" << std::endl;
+                } else {
+                    std::cout << "유사한 사용자를 찾을 수 없습니다. (공통 평점 부족)\n";
                 }
                 break;
             }
