@@ -19,6 +19,7 @@ private:
     std::vector<int> findSimilarUsers(int targetUserId, int k, 
                                      const UserManager& um, 
                                      const RatingManager& rm);
+                                     
     // 3. 보조함수2: 특정 영화에 대한 예상 평점(가중 평균 계산)
     double predictRating(int targetUserId, int movieId, const std::vector<int>& topKUsers, 
                         const RatingManager& rm);
