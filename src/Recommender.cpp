@@ -86,7 +86,7 @@ const MovieManager& mm, const UserManager& um, const RatingManager& rm){
     }
 
     //5단계: 점수계산&정렬반환 (sort,람다)
-    vector<pair<double, int>> finalRank;
+    vector<pair<int, double>> finalRank;
     for (auto const& [id, score]: movieScores){
         finalRank.push_back({id, score});
     }
@@ -96,8 +96,10 @@ const MovieManager& mm, const UserManager& um, const RatingManager& rm){
     //상위 n개의 Movie객체 포인터 담기
     vector<Movie*> result;
     for(int i=0; i<n&&i<finalRank.size(); i++){
-        
+        Movie* m= mm.findById(finalRank[i].first);
+        if(m != nullptr) result.push_back(m); //MovieManager가 영화를 성공적으로 찾아왔을 때만 담는다
     }
+    return result;
 }
 //<Movie*>는 Movie객체가 메모리 어디에 있는지 가리키는 주소값(포인터)를 의미
 //Movie객체 자체(용량이 큼)를 복사하면 비효율적이므로 주소만 넘겨주는 것

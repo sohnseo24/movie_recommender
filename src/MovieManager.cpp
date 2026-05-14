@@ -45,6 +45,16 @@ Movie* MovieManager::findByTitle(const std::string& title) {
     return nullptr; // 못 찾으면 nullptr 전달
 }
 
+Movie* MovieManager::findById(int movieId) const{//Recommender의 메인추천함수 recommend의 5단계:상위 n개의 영화반환을 위해서 추가함
+    // const 함수 내부라 원본을 지키기 위해 일단 const Movie&로 꺼내기
+    for (const Movie& m: movies) {//movies(영화들 모아놓은 벡터)에서 movie(영화하나) 하나씩 꺼내서 
+        if(m.getId()==movieId){
+            return const_cast<Movie*>(&m); //찾은 영화 객체의 실제 메모리 주소를 반환
+        }
+    }
+    return nullptr;
+}
+
 void MovieManager::loadMovies(const std::string& filename) { //CSV로딩을 위해 새로 추가
     std::ifstream file(filename);
 
