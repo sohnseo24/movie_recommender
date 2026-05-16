@@ -23,7 +23,7 @@ void showMenu() {
     std::cout << "\n[ 평점 ]\n";
     std::cout << " 7. 평점 입력\n";
     std::cout << " 8. 영화별 평점 보기\n";
-    std::cout << " 9. 사용자 유사도 계산\n";
+    std::cout << " 9. 맞춤 영화 추천 받기\n";
     
     std::cout << "\n 0. 종료\n";
     std::cout << "\n선택 > ";
@@ -38,6 +38,8 @@ int main() {
     movieMgr.loadFromFile("data/movies.csv");
     userMgr.loadFromFile("data/users.csv");
     ratingMgr.loadFromFile("data/ratings.csv");
+
+    Recommender rec(movieMgr, userMgr, ratingMgr);//원본매니저들을 딱 한번 전달하여 Recommender세팅
 
 
     int nextMovieId = 1;
@@ -142,6 +144,41 @@ int main() {
                 }
                 break;
             }
+            case 9: {
+                //기준 사용자ID, k, n을 입력받는다
+                std::string userIdStr, kStr, nStr;
+                std::cout << "추천 대상 사용자 ID: "; std::getline(std::cin, userIdStr);
+                std::cout << "참고할 유사 사용자 수(K): "; std::getline(std::cin, kStr);
+                std::cout << "추천받을 영화 수(N): "; std::getline(std::cin, nStr);
+
+                try {
+                    //원래 타입으로 복귀
+                    int targetId = std::stoi(userIdStr);
+                    int k = std::stoi(kStr);
+                    int n = std::stoi(nStr);
+
+                // 이러면 recommendations는 상위n개의 영화객체의 주소가 저장된 벡터가 된다.
+                std::vector<Movie*> recommendations = rec.recommend(targetId, k, n);
+
+                if (recommendations.empty()) {//recommendations이 비어있으면 
+                    std::cout << "추천할만한 새로운 영화가 없습니다.\n";
+                } 
+                else {//recommendations가 비어있지 않다면 연산자 오버로딩으로 n개의 영화 정보 출력
+                    std::cout << "\n--[추천된 영화 목록 (상위 " << n << "개)]---\n";
+                    for (const auto& moviePtr : recommendations) {
+                        if (moviePtr) {
+                            std::cout << *moviePtr << std::endl; // 연산자 오버로딩 출력 (Moive.h)
+                            //*를 통해 주소를 들고 해당 주소에 위치한 실제 movie객체 원본에 접근해서 출력
+                        }
+                    }
+                }
+                } 
+                catch (...) { //모든 에러를 다 잡아줌
+                    std::cout << "올바른 숫자를 입력해주세요.\n";
+                } 
+
+                break;
+            } 
             default:
                 std::cout << "올바른 메뉴 번호를 선택해주세요.\n";
                 break;
