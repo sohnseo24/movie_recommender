@@ -5,8 +5,7 @@
 #include <map>
 using namespace std;
 
-vector<int> Recommender::findSimilarUsers(int targetUserId, int k,
-const UserManager& um, const RatingManager& rm){
+vector<int> Recommender::findSimilarUsers(int targetUserId, int k){
     //1) (유사도 , userId)쌍을 저장할 벡터 생성 (STL pair활용)
     vector<pair<double, int>> similarity; //<first(=유사도), second(=Id)>임
 
@@ -48,8 +47,7 @@ const UserManager& um, const RatingManager& rm){
 
 
 
-vector<Movie*> Recommender::recommend(int targetUserId, int k, int n,//n:최종 상위 몇개영화 반환할건지
-const MovieManager& mm, const UserManager& um, const RatingManager& rm){
+vector<Movie*> Recommender::recommend(int targetUserId, int k, int n){//n:최종 상위 몇개영화 반환할건지
     //1단계(나): 내 평점 가져오기->내가 이미 본 영화 ID들 set에 저장(STL set활용->중복제거 및 빠른 검색)
     vector<Rating> myRatings=rm.findByUser(targetUserId);
     if (myRatings.empty()){//[엣지케이스 1번]: 평점이 0개인 사용자-> 나에 대한 정보가 없어 추천자체가 불가능
