@@ -55,7 +55,7 @@ Movie* MovieManager::findById(int movieId) const{//Recommender의 메인추천�
     return nullptr;
 }
 
-void MovieManager::loadMovies(const std::string& filename) { //CSV로딩을 위해 새로 추가
+void MovieManager::loadFromFile(const std::string& filename) { //CSV로딩을 위해 새로 추가
     std::ifstream file(filename);
 
     if (!file.is_open()) {
@@ -81,7 +81,7 @@ void MovieManager::loadMovies(const std::string& filename) { //CSV로딩을 위�
     std::cout << "[알림] " << filename << " 데이터를 성공적으로 불러왔습니다." << std::endl;
 }
 
-void MovieManager::saveMovies(const std::string& filename) const {
+void MovieManager::saveToFile(const std::string& filename) const {
     std::ofstream file(filename); // 파일 열기
 
     if (!file.is_open()) {
@@ -102,4 +102,8 @@ void MovieManager::saveMovies(const std::string& filename) const {
 
     file.close();
     std::cout << "[알림] " << filename << " 저장 완료: " << movies.size() << "건" << std::endl;
+}
+
+int MovieManager::size() const { //벡터의 크기 반환하는 함수 추가
+    return movies.size();
 }

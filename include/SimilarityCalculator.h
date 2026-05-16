@@ -1,5 +1,7 @@
+#pragma once
 #include "Rating.h"
 #include <vector>
+
 class SimilarityCalculator{
 public: 
     //두 사용자의 평점 목록을 받아 유사도 점수를 반환한다.

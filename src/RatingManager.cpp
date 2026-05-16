@@ -21,7 +21,7 @@ void RatingManager::printRatingsByMovie(int movieId) const {
     if (count == 0) std::cout << "해당 영화에 대한 평점이 없습니다." << std::endl;
 }
 
-void RatingManager::loadRatings(const std::string& filename) { //CSV로딩을 위해 새로 추가
+void RatingManager::loadFromFile(const std::string& filename) { //CSV로딩을 위해 새로 추가
     std::ifstream file(filename);
 
     if (!file.is_open()) {
@@ -45,7 +45,7 @@ void RatingManager::loadRatings(const std::string& filename) { //CSV로딩을 �
     }
     std::cout << "[알림] " << filename << " 데이터를 성공적으로 불러왔습니다." << std::endl;
 }
-void RatingManager::saveRatings(const std::string& filename) const {
+void RatingManager::saveToFile(const std::string& filename) const {
     std::ofstream file(filename); // 파일 열기
 
     if (!file.is_open()) {
@@ -75,4 +75,8 @@ std::vector<Rating> RatingManager::findByUser(int userId) const {
         }
     }
     return userRatings;
+}
+
+int RatingManager::size() const{ //벡터의 크기 반환하는 함수 추가
+    return ratings.size();
 }

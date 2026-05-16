@@ -60,7 +60,7 @@ vector<Movie*> Recommender::recommend(int targetUserId, int k, int n){//n:최종
     }
 
     //2~3단계(타인): 모든 사용자와의 유사도를 계산해서 상위 K명 선택, 후에 4단계에서 topKUsers에 저장된 Id를 friendId로 받아 findByUser로 그 friendId에 해당하는 타인의 평점을 friendRatings에 저장 
-    vector<int> topKUsers=findSimilarUsers(targetUserId, k, um, rm);
+    vector<int> topKUsers=findSimilarUsers(targetUserId, k);
     if(topKUsers.empty()) return{}; 
 
     //4단계: 후보영화 수집 및 점수 누적(필터링:내가 안본 영화만 모으기=>가중평균:유사도가 높은 사용자들의 평점에 가중치주기
