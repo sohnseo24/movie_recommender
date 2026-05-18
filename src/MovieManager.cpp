@@ -103,3 +103,7 @@ void MovieManager::saveToFile(const std::string& filename) const {
     file.close();
     std::cout << "[알림] " << filename << " 저장 완료: " << movies.size() << "건" << std::endl;
 }
+
+int MovieManager::size() const {
+    return movies.size(); // 영화 벡터의 크기 반환!
+}
