@@ -20,6 +20,7 @@ private:
     const UserManager& um;
     const RatingManager& rm;
 
+
     // 2. 보조함수: 나와 가장 유사한 상위 K명의 사용자 ID를 찾아 반환
     //(내 평점을 가져 온 후 날 제외하고 나머지 모든 사용자와 유사도 계산-> sort+람다를 사용해 유사도상위 K명 선택)
     std::vector<int> findSimilarUsers(int targetUserId, int k);

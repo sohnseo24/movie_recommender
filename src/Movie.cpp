@@ -8,7 +8,7 @@ Movie::Movie()
 // 4인자 생성자
 Movie::Movie(int id, const std::string& title, const std::string& genre, int year)
     : id(id), title(title), genre(genre), releaseYear(year), totalRating(0.0), ratingCount(0) {}
-//CSV로딩용 생성자 추가(개봉연도와 평점을 받는 생성자 추가)
+// CSV로딩용 생성자 추가(개봉연도와 평점을 받는 생성자 추가)
 Movie::Movie(int id, const std::string& title, int releaseYear, double rating) 
     : id(id), title(title), releaseYear(releaseYear), totalRating(rating) {}
 
