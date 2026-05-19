@@ -39,7 +39,7 @@ vector<int> Recommender::findSimilarUsers(int targetUserId, int k){
     });
     //5) 상위 K명의 사용자 ID만 골라내서 반환
     vector<int> topKUsers;
-    for(int i=0; i<k && i<similarity.size(); i++){ //k까지 해야하는데 similarity.size()가 k보다 작을 수도 있으니까 방지하기 위해서 &&로 조건 추가해줌
+    for(size_t i=0; i< static_cast<size_t>(k) && i<similarity.size(); i++){ //k까지 해야하는데 similarity.size()가 k보다 작을 수도 있으니까 방지하기 위해서 &&로 조건 추가해줌
         topKUsers.push_back(similarity[i].second);
     }
     return topKUsers;
@@ -93,7 +93,7 @@ vector<Movie*> Recommender::recommend(int targetUserId, int k, int n){//n:최종
     });
     //상위 n개의 Movie객체 포인터 담기
     vector<Movie*> result;
-    for(int i=0; i<n&&i<finalRank.size(); i++){
+    for(size_t i=0; i< static_cast<size_t>(n) && i<finalRank.size(); i++){
         Movie* m= mm.findById(finalRank[i].first);
         if(m != nullptr) result.push_back(m); //MovieManager가 영화를 성공적으로 찾아왔을 때만 담는다
     }
