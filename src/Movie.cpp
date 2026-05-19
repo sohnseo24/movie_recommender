@@ -9,9 +9,9 @@ Movie::Movie()
 Movie::Movie(int id, const std::string& title, const std::string& genre, int year)
     : id(id), title(title), genre(genre), releaseYear(year), totalRating(0.0), ratingCount(0) {}
 // CSV로딩용 생성자 추가(개봉연도와 평점을 받는 생성자 추가)
+// 완벽한 방어: CSV 로딩용 생성자 수정
 Movie::Movie(int id, const std::string& title, int releaseYear, double rating) 
-    : id(id), title(title), releaseYear(releaseYear), totalRating(rating) {}
-
+    : id(id), title(title), genre(""), releaseYear(releaseYear), totalRating(rating), ratingCount(1) {}
 // Getter 구현
 int         Movie::getId()           const { return id; }
 std::string Movie::getTitle()        const { return title; }
