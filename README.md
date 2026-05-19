@@ -1,7 +1,4 @@
-#include <iostream>
-int main(){
-
-std::cout<<"hello world"<<std::endl;
-
-return 0;
-}
+# 영화 추천 시스템 (Movie Recommender)
+- 소속: 숭실대학교 컴퓨터학부
+- 학번: 20253011
+- 이름: 손서영 
