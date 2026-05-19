@@ -10,7 +10,7 @@ double SimilarityCalculator::calculate(
 
     //이중 반복문: user1의 모든 평점* user2의 모든 평점
     for(const Rating&r1: user1){
-        for(const Rating r2: user2){
+        for(const Rating& r2: user2){
             if(r1.getMovieId()==r2.getMovieId()){
                 commonCount++;
                 scoreDiffSum+=std::abs(r1.getScore()-r2.getScore());

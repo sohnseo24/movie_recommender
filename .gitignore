@@ -1,0 +1,16 @@
+#compile
+# 컴파일 산출물 및 빌드 디렉토리 무시
+*.o
+*.a
+*.out
+obj/
+
+# 예전 실행 파일 및 현재 실행 파일 무시 
+movie
+movie_app
+movie_recommender
+
+# IDE 및 OS 자동 생성 파일 무시
+.vscode/
+.DS_Store
+Thumbs.db
