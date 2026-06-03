@@ -39,7 +39,8 @@ vector<int> Recommender::findSimilarUsers(int targetUserId, int k){
     });
     //5) 상위 K명의 사용자 ID만 골라내서 반환
     vector<int> topKUsers;
-    for(size_t i=0; i< static_cast<size_t>(k) && i<similarity.size(); i++){ //k까지 해야하는데 similarity.size()가 k보다 작을 수도 있으니까 방지하기 위해서 &&로 조건 추가해줌
+    for(size_t i=0; i< static_cast<size_t>(k) && i<similarity.size(); i++){ 
+        //엣지 케이스 처리: k까지 해야하는데 similarity.size()가 k보다 작을 수도 있으니까 방지하기 위해서 &&로 조건 추가해줌
         topKUsers.push_back(similarity[i].second);
     }
     return topKUsers;
@@ -59,7 +60,8 @@ vector<Movie*> Recommender::recommend(int targetUserId, int k, int n){//n:최종
         watchedMovieIds.insert(r.getMovieId());
     }
 
-    //2~3단계(타인): 모든 사용자와의 유사도를 계산해서 상위 K명 선택, 후에 4단계에서 topKUsers에 저장된 Id를 friendId로 받아 findByUser로 그 friendId에 해당하는 타인의 평점을 friendRatings에 저장 
+    //2~3단계(타인): 모든 사용자와의 유사도를 계산해서 상위 K명 선택, 
+    //후에 4단계에서 topKUsers에 저장된 Id를 friendId로 받아 findByUser로 그 friendId에 해당하는 타인의 평점을 friendRatings에 저장 
     vector<int> topKUsers=findSimilarUsers(targetUserId, k);
     if(topKUsers.empty()) return{}; 
 

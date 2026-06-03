@@ -75,7 +75,7 @@ void MovieManager::loadFromFile(const std::string& filename) { //CSV로딩을 �
         std::getline(ss, token, ','); int year = std::stoi(token);
         std::getline(ss, token, ','); double rating = std::stod(token);
 
-        //읽어온 데이터를 바로 movies 벡터에 추가!
+        //읽어온 데이터를 바로 movies 벡터에 추가
         movies.push_back(Movie(id, title, year, rating)); 
     }
     std::cout << "[알림] " << filename << " 데이터를 성공적으로 불러왔습니다." << std::endl;
@@ -94,7 +94,7 @@ void MovieManager::saveToFile(const std::string& filename) const {
 
     // 2. 데이터 작성
     for (const auto& m : movies) {
-        file << m.getId() << "," 
+        file << m.getId() << "," //콘솔창에 글자를 쓸 때 std::cout <<을 쓰는 것처럼, 여기서는 file <<을 사용해 콘솔창 대신 열어둔 파일 내부에 글자를 씀
              << m.getTitle() << "," 
              << m.getReleaseYear() << "," 
              << m.getAverageRating() << std::endl; 
