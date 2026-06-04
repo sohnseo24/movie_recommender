@@ -5,7 +5,7 @@
 #include "BaseManager.h"
 
 class MovieManager: public BaseManager{
-private:
+private: 
     std::vector<Movie> movies; // 영화 데이터를 담는 벡터
 
 public:
@@ -20,5 +20,7 @@ public:
     //이 함수는 저장만 하고 MovieManager내부 값을 바꾸지 않으므로 const를 씀
 
     int size() const override; //크기 반환 함수 추가
+
+    double getTotalAverageRating() const;//csv파일에 있는 전체 영화의 평균 평점 구하기 
 };
 

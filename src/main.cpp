@@ -25,6 +25,7 @@ void showMenu() {
     std::cout << " 8. 영화별 평점 보기\n";
     std::cout << " 9. 맞춤 영화 추천 받기\n";
     
+    
     std::cout << "\n 0. 종료\n";
     std::cout << "\n선택 > ";
 }
@@ -178,7 +179,8 @@ int main() {
                 } 
 
                 break;
-            } 
+            }
+            
             default:
                 std::cout << "올바른 메뉴 번호를 선택해주세요.\n";
                 break;

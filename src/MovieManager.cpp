@@ -5,6 +5,8 @@
 #include <fstream>   // ifstream 사용을 위해
 #include <sstream>   // stringstream 사용을 위해
 #include <string>    // string, stoi, stod 사용을 위해
+#include <numeric> // std::accumulate를 쓰기 위해 
+
 using namespace std;
 
 void MovieManager::addMovie(const Movie& m) {
@@ -106,4 +108,21 @@ void MovieManager::saveToFile(const std::string& filename) const {
 
 int MovieManager::size() const {
     return movies.size(); // 영화 벡터의 크기 반환!
+}
+
+double MovieManager::getTotalAverageRating() const {
+    // 예외 처리: 빈 vector를 나누면 발생하는 division by zero 방어 
+    if (movies.empty()) {
+        throw std::runtime_error("영화 데이터가 없습니다."); 
+    }
+
+    // Modern C++ STL 방식: std::accumulate + Lambda 활용 
+    double sum = std::accumulate(
+        movies.begin(), movies.end(), 0.0,
+        [](double acc, const Movie& m) {
+            return acc + m.getAverageRating(); // 누적값(acc)에 각 영화의 평점을 더해나감 
+        }
+    );
+
+    return sum / movies.size(); 
 }
