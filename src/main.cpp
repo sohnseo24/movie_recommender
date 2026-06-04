@@ -24,8 +24,10 @@ void showMenu() {
     std::cout << " 7. 평점 입력\n";
     std::cout << " 8. 영화별 평점 보기\n";
     std::cout << " 9. 맞춤 영화 추천 받기\n";
-    
-    
+
+    std::cout << "\n[ 확장 통계 기능 ]\n"; 
+    std::cout << " 10. 전체 영화의 통합 평균 평점 조회\n";
+
     std::cout << "\n 0. 종료\n";
     std::cout << "\n선택 > ";
 }
@@ -178,6 +180,16 @@ int main() {
                     std::cout << "올바른 숫자를 입력해주세요.\n";
                 } 
 
+                break;
+            }
+            case 10: {
+                try {
+                    std::cout << "\n[시스템 통계 리포트]" << std::endl;
+                    std::cout << " ▶ 전체 영화 통합 평균 평점: " << movieMgr.getTotalAverageRating() << "점" << std::endl;
+                } catch (const std::exception& e) {
+                    // 빈 벡터 나누기(division by zero) 등의 런타임 오류가 날 때를 방어
+                    std::cerr << " [오류] 통계 계산 실패: " << e.what() << std::endl;
+                }
                 break;
             }
             
