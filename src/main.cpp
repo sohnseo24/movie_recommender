@@ -37,10 +37,16 @@ int main() {
     UserManager userMgr;
     RatingManager ratingMgr;
 
-    //프로그램 시작 시 데이터 불러오기
-    movieMgr.loadFromFile("data/movies.csv");
-    userMgr.loadFromFile("data/users.csv");
-    ratingMgr.loadFromFile("data/ratings.csv");
+    try {
+        // 프로그램 시작 시 데이터 불러오기
+        movieMgr.loadFromFile("data/movies.csv");
+        userMgr.loadFromFile("data/users.csv");
+        ratingMgr.loadFromFile("data/ratings.csv");
+    } catch (const std::runtime_error& e) {
+        std::cerr << "\n [시스템 초기화 실패] " << e.what() << std::endl;
+        std::cerr << "필수 데이터 파일이 누락되어 프로그램을 실행할 수 없습니다. 강제 종료합니다." << std::endl;
+        return -1; // 파일이 없으면 더 이상 무한 루프 메뉴를 켜지 않고 여기서 안전하게 종료 
+    }
 
     Recommender rec(movieMgr, userMgr, ratingMgr);//원본매니저들을 딱 한번 전달하여 Recommender세팅
 
@@ -138,7 +144,7 @@ int main() {
 
                 } catch (const std::out_of_range& e) {
                     //사용자가 없든, 영화가 없든 간에 뱉어낸 예외 메시지(e.what())를 여기서 한방에 처리
-                    std::cout << "영화 조회 실패: " << e.what() << std::endl;
+                    std::cout << "등록실패: " << e.what() << std::endl;
                 } catch (const std::invalid_argument& e) {
                     // 혹시 사용자가 평점에 숫자가 아닌 'abc' 같은 걸 입력해 std::stod가 터졌을 때를 대비
                     std::cout << "올바른 평점 숫자를 입력해 주세요.\n";

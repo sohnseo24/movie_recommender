@@ -61,8 +61,7 @@ void MovieManager::loadFromFile(const std::string& filename) { //CSV로딩을 �
     std::ifstream file(filename);
 
     if (!file.is_open()) {
-        std::cerr << "Error: " << filename << " 열 수 없습니다" << std::endl;
-        return;
+        throw std::runtime_error("치명적 오류: 영화 데이터 파일('" + filename + "')을 열 수 없습니다.");
     }
 
     std::string line;
