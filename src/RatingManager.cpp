@@ -30,17 +30,23 @@ void RatingManager::loadFromFile(const std::string& filename) { //CSV로딩을 �
 
     std::string line;
     std::getline(file, line); // 헤더 스킵
+    int lineNum = 1;
 
     while (std::getline(file, line)) {
-        std::stringstream ss(line);
-        std::string token;
+        lineNum++;
+        try {
+            std::stringstream ss(line);
+            std::string token;
 
-        std::getline(ss, token, ','); int userId = std::stoi(token);
-        std::getline(ss, token, ','); int movieId = std::stoi(token);
-        std::getline(ss, token, ','); int score = std::stoi(token);
+            std::getline(ss, token, ','); int userId = std::stoi(token);
+            std::getline(ss, token, ','); int movieId = std::stoi(token);
+            std::getline(ss, token, ','); double score = std::stod(token);
 
-        //읽어온 데이터를 바로 ratings 벡터에 추가!
-        ratings.push_back(Rating(userId, movieId, score)); 
+            ratings.push_back(Rating(userId, movieId, score));
+            
+        } catch (const std::exception& e) {
+            std::cerr << "[CSV 데이터 손상] 평점 매니저 " << lineNum << "번 줄 건너뜀 (원인: " << e.what() << ")" << std::endl;
+        }
     }
     std::cout << "[알림] " << filename << " 데이터를 성공적으로 불러왔습니다." << std::endl;
 }

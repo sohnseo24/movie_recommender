@@ -67,19 +67,30 @@ void MovieManager::loadFromFile(const std::string& filename) { //CSV로딩을 �
     std::string line;
     std::getline(file, line); // 헤더 스킵
 
+    int lineNum = 1; //[예외처리3: 추가] 에러가 발생한 라인 번호를 추적하기 위한 변수 (헤더가 1번 줄)
+    
     while (std::getline(file, line)) {
-        std::stringstream ss(line);
-        std::string token;
+        lineNum++; // 줄을 읽을 때마다 카운트 업
+        try{
+            std::stringstream ss(line);
+            std::string token;
 
-        std::getline(ss, token, ','); int id = std::stoi(token);
-        std::getline(ss, token, ','); std::string title = token;
-        std::getline(ss, token, ','); int year = std::stoi(token);
-        std::getline(ss, token, ','); double rating = std::stod(token);
+            std::getline(ss, token, ','); int id = std::stoi(token);
+            std::getline(ss, token, ','); std::string title = token;
+            std::getline(ss, token, ','); int year = std::stoi(token);
+            std::getline(ss, token, ','); double rating = std::stod(token);
 
-        //읽어온 데이터를 바로 movies 벡터에 추가
-        movies.push_back(Movie(id, title, year, rating)); 
+            //읽어온 데이터를 바로 movies 벡터에 추가
+            movies.push_back(Movie(id, title, year, rating));
+
+        }catch(const std::exception& e) {
+            // 파싱 에러 시 프로그램이 죽지 않고, 에러 로그만 찍은 뒤 continue 처리
+                std::cerr << " [CSV 데이터 손상] 영화 매니저 " << lineNum << "번 줄 건너뜀 (원인: " << e.what() << ")" << std::endl;
+                // 루프 안이라서 별도의 조치 없이 다음 데이터 줄로 자연스럽게 넘어갈것 
+            }
     }
     std::cout << "[알림] " << filename << " 데이터를 성공적으로 불러왔습니다." << std::endl;
+
 }
 
 void MovieManager::saveToFile(const std::string& filename) const {

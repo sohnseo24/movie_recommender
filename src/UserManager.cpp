@@ -47,8 +47,11 @@ void UserManager::loadFromFile(const std::string& filename) { //CSV로딩을 위
 
     std::string line;
     std::getline(file, line); // 헤더 스킵
+    int lineNum = 1;
 
     while (std::getline(file, line)) {
+        lineNum++;
+        try{
         std::stringstream ss(line);
         std::string token;
 
@@ -59,6 +62,9 @@ void UserManager::loadFromFile(const std::string& filename) { //CSV로딩을 위
 
         //읽어온 데이터를 바로 users벡터에 추가
         users.push_back(User(id, name, age)); 
+        }catch(const std::exception& e) {
+            std::cerr << "[CSV 데이터 손상] 사용자 매니저 " << lineNum << "번 줄 건너뜀 (원인: " << e.what() << ")" << std::endl;
+        }
     }
     std::cout << "[알림] " << filename << " 데이터를 성공적으로 불러왔습니다." << std::endl;
 }
