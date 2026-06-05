@@ -85,11 +85,11 @@ int main() {
                 std::cout << "영화가 추가되었습니다.\n";
                 break;
             }
-            case 2: { 
+            case 2: { //예외처리:findByTitle을 참조자 반환으로 수정함에 따라 메인수정
                 std::string title;
                 std::cout << "검색할 제목: "; std::getline(std::cin, title); 
 
-                try{ //예외처리:findByTitle을 참조자 반환으로 수정함에 따라 메인수정 
+                try{  
                     Movie& m = movieMgr.findByTitle(title);
                     std::cout << m << std::endl; // 정상 출력
                 }catch(const std::out_of_range& e){//만약 영화가 없어서 함수가 예외를 throw하면 일로 점프하여 안전하게 처리
@@ -123,28 +123,21 @@ int main() {
                 std::cout << "평점(0~5): "; std::getline(std::cin, scoreStr);
 
                 try {
-                    // 2) 그 정보를 가지고 검색
-                    // [사용자 검색] 여전히 포인터 방식이므로 nullptr 체크가 필요합니다.
-                    User* u = userMgr.findByName(userName);
-                    if (!u) {
-                        std::cout << "사용자를 찾을 수 없습니다.\n";
-                        break; // 더 이상 진행하지 않고 case 7을 빠져나갑니다.
-                    }
-
-                    // [영화 검색]: 포인터(*)가 아닌 참조자(&)로 받음 
-                    // 만약 영화가 없다면 이 줄에서 바로 예외(std::out_of_range)를 던져 catch 블록으로 점프
-                    Movie& m = movieMgr.findByTitle(movieTitle); 
+                    // 2) [사용자 & 영화 검색] 2개 매니저 모두 참조자(&) 방식으로 수정 
+                    // 둘 중 하나라도 데이터가 없으면 즉시 해당 함수에서 예외(out_of_range)를 던져 catch 블록으로 순간이동
+                    User& u = userMgr.findByName(userName);
+                    Movie& m = movieMgr.findByTitle(movieTitle);
 
                     // 3) 검색했을 때 사용자와 영화가 모두 존재하므로 평점 계산하여 등록
                     double score = std::stod(scoreStr); // 문자열을 double 타입으로 변환
 
-                    ratingMgr.addRating(Rating(u->getId(), m.getId(), score)); // 전체 평점 리스트에 기록
+                    ratingMgr.addRating(Rating(u.getId(), m.getId(), score)); // 전체 평점 리스트에 기록
                     m.addRating(score); // 개별 영화의 평점 누적 연산
 
                     std::cout << "평점이 등록되었습니다.\n";
 
                 } catch (const std::out_of_range& e) {
-                    //movieMgr.findByTitle이 던진 예외를 여기서 잡아 에러 메시지를 띄움 
+                    //사용자가 없든, 영화가 없든 간에 뱉어낸 예외 메시지(e.what())를 여기서 한방에 처리
                     std::cout << "영화 조회 실패: " << e.what() << std::endl;
                 } catch (const std::invalid_argument& e) {
                     // 혹시 사용자가 평점에 숫자가 아닌 'abc' 같은 걸 입력해 std::stod가 터졌을 때를 대비

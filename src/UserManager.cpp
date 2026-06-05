@@ -22,14 +22,19 @@ void UserManager::printAllUsers() const {
 }
 
 // 반복문을 이용한 사용자 이름 검색
-User* UserManager::findByName(const std::string& name) {
+User& UserManager::findByName(const std::string& name) {
     // 벡터를 처음부터 끝까지 돌면서 이름을 비교
-    for (size_t i = 0; i < users.size(); i++) {
-        if (users[i].getName() == name) {
-            return &users[i]; // 찾으면 해당 사용자의 주소 즉 포인터 반환
+    for (User& u : users) {
+
+        if (u.getName() == name) {
+            return u; //포인터 기호(&) 빼고 참조자 그대로 반환
         }
     }
-    return nullptr; // 끝까지 못 찾으면 없다는 뜻으로 nullptr 반환
+
+    //nullptr 대신 명시적 예외 발생
+
+    throw std::out_of_range("Error: '" + name + "' 해당 이름을 가진 사용자를 찾을 수 없습니다.");
+
 }
 
 //CSV를 위한 loadUser추가

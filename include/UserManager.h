@@ -16,7 +16,7 @@ public:
     void printAllUsers() const;
 
     // 7번 평점 입력을 위해 미리 만드는 검색 기능
-    User* findByName(const std::string& name);
+    User& findByName(const std::string& name); //예외처리: 참조 방식으로 바꿈 
 
     void loadFromFile(const std::string& filename) override;//프로그램 시작시 CSV파일에서 데이터를 로드한다.
     void saveToFile(const std::string& filename) const override;//프로그램 종료시 데이터를 CSV파일에 저장한다.
