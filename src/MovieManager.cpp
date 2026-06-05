@@ -37,24 +37,24 @@ void MovieManager::sortByRating() {
     std::cout << "\n[알림] 평점순(다중 기준)으로 정렬되었습니다." << std::endl;
 }
 
-Movie* MovieManager::findByTitle(const std::string& title) {
+Movie& MovieManager::findByTitle(const std::string& title) {
     for (Movie& m : movies) {
         // Movie 클래스의 operator==사용
         if (m == title) { 
-            return &m; // 찾으면 그 영화의 주소 전달
+            return m; // 찾으면 그 영화의 참조자 전달(수정:예외처리)
         }
     }
-    return nullptr; // 못 찾으면 nullptr 전달
+    throw std::out_of_range("Error: '" + title + "' 해당 제목의 영화를 찾을 수 없습니다.");//예외처리:nullptr 대신 호출자에게 검색 실패 예외를 명시적으로 던짐.
 }
 
-Movie* MovieManager::findById(int movieId) const{//Recommender의 메인추천함수 recommend의 5단계:상위 n개의 영화반환을 위해서 추가함
+const Movie& MovieManager::findById(int movieId) const{//Recommender의 메인추천함수 recommend의 5단계:상위 n개의 영화반환을 위해서 추가함
     // const 함수 내부라 원본을 지키기 위해 일단 const Movie&로 꺼내기
     for (const Movie& m: movies) {//movies(영화들 모아놓은 벡터)에서 movie(영화하나) 하나씩 꺼내서 
         if(m.getId()==movieId){
-            return const_cast<Movie*>(&m); //찾은 영화 객체의 실제 메모리 주소를 반환
+            return m; //(수정:예외처리) 
         }
     }
-    return nullptr;
+    throw std::out_of_range("Error: ID [" + std::to_string(movieId) + "]에 해당하는 영화가 존재하지 않습니다.");//예외처리:ID 범위 초과 및 검색 실패 
 }
 
 void MovieManager::loadFromFile(const std::string& filename) { //CSV로딩을 위해 새로 추가

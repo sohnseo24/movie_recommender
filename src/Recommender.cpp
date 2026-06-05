@@ -93,12 +93,24 @@ vector<Movie*> Recommender::recommend(int targetUserId, int k, int n){//n:최종
     sort(finalRank.begin(), finalRank.end(),[](const auto& a, const auto& b){
         return a.second > b.second; //점수가 큰 순서대로 정렬(내림차순)
     });
-    //상위 n개의 Movie객체 포인터 담기
+    //상위 n개의 Movie객체 포인터 담기(예외처리: findById가 참조자를 반환하는 방식으로 수정됨에 따라 예외처리 할 수있도록 수정)
     vector<Movie*> result;
     for(size_t i=0; i< static_cast<size_t>(n) && i<finalRank.size(); i++){
-        Movie* m= mm.findById(finalRank[i].first);
-        if(m != nullptr) result.push_back(m); //MovieManager가 영화를 성공적으로 찾아왔을 때만 담는다
-    }
+        try {
+                // [수정1] 포인터 대신 MovieManager가 제공하는 const Movie& 참조자로 안전하게 영화를 조회
+                // 만약 ID에 해당하는 영화를 찾지 못하면 MovieManager 내부에서 std::out_of_range 예외를 명시적으로 던짐 
+                const Movie& m = mm.findById(finalRank[i].first); 
+
+                // [수정2] Recommender의 리턴 스펙(vector<Movie*>)과 기존 주소값 최적화 원칙을 고수하기 위해 
+                //참조자 m의 실제 메모리 주소값(&m)을 추출한 뒤 const_cast를 활용해 안전하게 벡터에 복사 비용 없이 넣음 
+                result.push_back(const_cast<Movie*>(&m));
+
+            } catch (const std::out_of_range& e) {
+                // [수정3] 연산 도중 혹시 모를 유령 영화 ID 예외가 발생해도 
+                // 프로그램이 절대로 뻗지 않고(Crash 방지), 에러 로그만 찍고 다음 순위 영화를 계속 안전하게 추천
+                std::cerr << "[경고] 추천 리스트 빌드 중 예외 발생: " << e.what() << std::endl;
+            }
+    } 
     return result;
 }
 //<Movie*>는 Movie객체가 메모리 어디에 있는지 가리키는 주소값(포인터)를 의미

@@ -12,8 +12,8 @@ public:
     void addMovie(const Movie& m); //1번: 영화 추가
     void printAllMovies() const;//3번: 전체 목록 출력
     void sortByRating(); // 4번: 평점순 정렬 출력
-    Movie* findByTitle(const std::string& title); //2번: 제목으로 검색
-    Movie* findById(int movieId) const; //Recommender의 메인추천함수 recommend의 5단계:상위 n개의 영화반환을 위해서 추가함
+    Movie& findByTitle(const std::string& title); //2번: 제목으로 검색
+    const Movie& findById(int movieId) const; //Recommender의 메인추천함수 recommend의 5단계:상위 n개의 영화반환을 위해서 추가함
 
     void loadFromFile(const std::string& filename) override;//프로그램 시작시 CSV파일에서 데이터를 로드한다.
     void saveToFile(const std::string& filename) const override;//프로그램 종료시 데이터를 CSV파일에 저장한다.
