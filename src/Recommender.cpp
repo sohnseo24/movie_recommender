@@ -46,73 +46,92 @@ vector<int> Recommender::findSimilarUsers(int targetUserId, int k){
     return topKUsers;
 }
 
-
-
-vector<Movie*> Recommender::recommend(int targetUserId, int k, int n){//n:최종 상위 몇개영화 반환할건지
-    //1단계(나): 내 평점 가져오기->내가 이미 본 영화 ID들 set에 저장(STL set활용->중복제거 및 빠른 검색)
-    vector<Rating> myRatings=rm.findByUser(targetUserId);
-    if (myRatings.empty()){//[엣지케이스 1번]: 평점이 0개인 사용자-> 나에 대한 정보가 없어 추천자체가 불가능
-        cout<<"평점 기록이 없어 추천을 진행할 수 없습니다."<<endl;
-        return {}; //빈 벡터 반환 
+std::vector<Movie*> Recommender::recommend(int targetUserId, int k, int n) {
+    // 1단계: 내 평점 가져오기 및 본 영화 필터링용 set 구축
+    std::vector<Rating> myRatings = rm.findByUser(targetUserId);
+    if (myRatings.empty()) {
+        std::cout << "평점 기록이 없어 추천을 진행할 수 없습니다." << std::endl;
+        return {};
     }
-    set<int> watchedMovieIds;
-    for(const auto& r: myRatings){
-        watchedMovieIds.insert(r.getMovieId());
-    }
+    std::set<int> watchedMovieIds;
+    for(const auto& r : myRatings) watchedMovieIds.insert(r.getMovieId());
 
-    //2~3단계(타인): 모든 사용자와의 유사도를 계산해서 상위 K명 선택, 
-    //후에 4단계에서 topKUsers에 저장된 Id를 friendId로 받아 findByUser로 그 friendId에 해당하는 타인의 평점을 friendRatings에 저장 
-    vector<int> topKUsers=findSimilarUsers(targetUserId, k);
-    if(topKUsers.empty()) return{}; 
+    // 2~3단계: 타인과의 유사도 계산 후 상위 K명 선택
+    std::vector<int> topKUsers = findSimilarUsers(targetUserId, k);
+    if (topKUsers.empty()) return {}; 
 
-    //4단계: 후보영화 수집 및 점수 누적(필터링:내가 안본 영화만 모으기=>가중평균:유사도가 높은 사용자들의 평점에 가중치주기
-    //=>정렬:점수높은 순으로 영화나열=>반환: 상위 N개만 골라 반환)
-    //STL map활용 map<영화 ID, 누적점수>
-    map<int, double> movieScores;
+    // 4단계 분리-> 후보 영화 수집 및 가중 평균 점수 누적 함수 호출
+    std::map<int, double> movieScores = collectCandidateScores(myRatings, watchedMovieIds, topKUsers);
 
-    for(int friendId: topKUsers){
-        vector<Rating> friendRatings= rm.findByUser(friendId); //findByUser를 쓰면 그 사용자의 userRatings라는 벡터를 돌려줌
-        double similarity=SimilarityCalculator::calculate(myRatings,friendRatings);//가중치를 계산하기 위해서 친구와 나의 유사도를 다시 계산
+    // 5단계 분리-> 점수순 내림차순 정렬 함수 호출
+    std::vector<std::pair<int, double>> finalRank = sortCandidates(movieScores);
 
-        for(const auto& r: friendRatings){
-            int movieId =r.getMovieId();//friendRatings는 RatingManager에 의해 userRatings벡터니까(즉 user의 모든 평점을 다 모아놓은 벡터니까 거기서 movieId를 뽑는다.)
+    // 최종 반환 분리-> 상위 N개 Movie 객체 포인터 안전 적재 및 반환
+    return buildFinalRecommendations(finalRank, n);
+}
+
+// [4단계]: 후보 영화 수집 및 가중평균 누적 점수 계산 구현
+std::map<int, double> Recommender::collectCandidateScores(
+    const std::vector<Rating>& myRatings, 
+    const std::set<int>& watchedMovieIds, 
+    const std::vector<int>& topKUsers
+) {
+    std::map<int, double> movieScores;
+
+    for(int friendId : topKUsers){
+        std::vector<Rating> friendRatings = rm.findByUser(friendId); 
+        double similarity = SimilarityCalculator::calculate(myRatings, friendRatings);
+
+        for(const auto& r : friendRatings){
+            int movieId = r.getMovieId();
             
-            //필터링: 내가 안본 영화만 모아야 함(set 검색)
-            if(watchedMovieIds.find(movieId)== watchedMovieIds.end()){
-                //가중평균: 유사도 * 친구 평점을 점수로 누적
-                movieScores[movieId] +=(similarity * r.getScore());//map에 추가하면 이미 있는 아이디에 대해서는 누적해서 더하고, 없는 아이디에 대해서는 추가로 만들어서 저장한다.
+            // 필터링: 내가 안본 영화만 모으기
+            if(watchedMovieIds.find(movieId) == watchedMovieIds.end()){
+                // 가중평균 누적 점수 연산
+                movieScores[movieId] += (similarity * r.getScore());
             }
         }
     }
+    return movieScores;
+}
 
-    //5단계: 점수계산&정렬반환 (sort,람다)
-    vector<pair<int, double>> finalRank;
-    for (auto const& [id, score]: movieScores){
+// [5단계-A]: 누적된 영화 점수들을 내림차순 정렬 구현
+std::vector<std::pair<int, double>> Recommender::sortCandidates(
+    const std::map<int, double>& movieScores
+) {
+    std::vector<std::pair<int, double>> finalRank;
+    
+    for (auto const& [id, score] : movieScores){
         finalRank.push_back({id, score});
     }
-    sort(finalRank.begin(), finalRank.end(),[](const auto& a, const auto& b){
-        return a.second > b.second; //점수가 큰 순서대로 정렬(내림차순)
+    
+    std::sort(finalRank.begin(), finalRank.end(), [](const auto& a, const auto& b){
+        return a.second > b.second; 
     });
-    //상위 n개의 Movie객체 포인터 담기(예외처리: findById가 참조자를 반환하는 방식으로 수정됨에 따라 예외처리 할 수있도록 수정)
-    vector<Movie*> result;
-    for(size_t i=0; i< static_cast<size_t>(n) && i<finalRank.size(); i++){
+    
+    return finalRank;
+}
+
+// [5단계-B]: 상위 N개 추출 및 참조자 기반 예외 처리 필터링 구현 
+std::vector<Movie*> Recommender::buildFinalRecommendations(
+    const std::vector<std::pair<int, double>>& finalRank, 
+    int n
+) {
+    std::vector<Movie*> result;
+    
+    for(size_t i = 0; i < static_cast<size_t>(n) && i < finalRank.size(); i++){
         try {
-                // [수정1] 포인터 대신 MovieManager가 제공하는 const Movie& 참조자로 안전하게 영화를 조회
-                // 만약 ID에 해당하는 영화를 찾지 못하면 MovieManager 내부에서 std::out_of_range 예외를 명시적으로 던짐 
-                const Movie& m = mm.findById(finalRank[i].first); 
+            // 포인터 대신 MovieManager가 제공하는 const Movie& 참조자로 안전하게 영화를 조회
+            const Movie& m = mm.findById(finalRank[i].first); 
 
-                // [수정2] Recommender의 리턴 스펙(vector<Movie*>)과 기존 주소값 최적화 원칙을 고수하기 위해 
-                //참조자 m의 실제 메모리 주소값(&m)을 추출한 뒤 const_cast를 활용해 안전하게 벡터에 복사 비용 없이 넣음 
-                result.push_back(const_cast<Movie*>(&m));
+            // Recommender 리턴 타입 스펙(Movie*)을 맞추기 위해 실제 메모리 주소값(&m) 추출 후 적재
+            result.push_back(const_cast<Movie*>(&m));
 
-            } catch (const std::out_of_range& e) {
-                // [수정3] 연산 도중 혹시 모를 유령 영화 ID 예외가 발생해도 
-                // 프로그램이 절대로 뻗지 않고(Crash 방지), 에러 로그만 찍고 다음 순위 영화를 계속 안전하게 추천
-                std::cerr << "[경고] 추천 리스트 빌드 중 예외 발생: " << e.what() << std::endl;
-            }
+        } catch (const std::out_of_range& e) {
+            // 유령 영화 ID 예외 발생 시 프로그램 다운을 막고 안전하게 로그만 출력 후 스킵
+            std::cerr << "[경고] 추천 리스트 빌드 중 예외 발생: " << e.what() << std::endl;
+        }
     } 
     return result;
 }
-//<Movie*>는 Movie객체가 메모리 어디에 있는지 가리키는 주소값(포인터)를 의미
-//Movie객체 자체(용량이 큼)를 복사하면 비효율적이므로 주소만 넘겨주는 것
-//MovieManager가 이미 모든 영화 정보를 들고 있기 때문에 recommend는 그냥 이 영화가 좋다 추천하는 역할-> 주소만 콕 집어서 알려주는게 훨씬 효율적
+

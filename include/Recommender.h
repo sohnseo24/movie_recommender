@@ -1,5 +1,8 @@
 #pragma once
 #include <vector>
+#include <map>
+#include <set>
+#include <utility>
 #include "MovieManager.h"
 #include "UserManager.h"
 #include "RatingManager.h"
@@ -24,6 +27,25 @@ private:
     // 2. 보조함수: 나와 가장 유사한 상위 K명의 사용자 ID를 찾아 반환
     //(내 평점을 가져 온 후 날 제외하고 나머지 모든 사용자와 유사도 계산-> sort+람다를 사용해 유사도상위 K명 선택)
     std::vector<int> findSimilarUsers(int targetUserId, int k);
+
+    //리팩토링 추가 구역
+    // [분리된 4단계 스펙]: 후보 영화 수집 및 가중평균 누적 점수 계산
+    std::map<int, double> collectCandidateScores(
+        const std::vector<Rating>& myRatings, 
+        const std::set<int>& watchedMovieIds, 
+        const std::vector<int>& topKUsers
+    );
+
+    // [분리된 5단계-A 스펙]: 누적된 영화 점수들을 내림차순 정렬
+    std::vector<std::pair<int, double>> sortCandidates(
+        const std::map<int, double>& movieScores
+    );
+
+    // [분리된 5단계-B 스펙]: 상위 N개 추출 및 예외 처리를 거쳐 최종 Movie* 포인터 리스트 구축 🛡️
+    std::vector<Movie*> buildFinalRecommendations(
+        const std::vector<std::pair<int, double>>& finalRank, 
+        int n
+    );
     
 };
 
