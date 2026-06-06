@@ -6,7 +6,7 @@ Rating::Rating()
 
 Rating::Rating(int userId, int movieId, double s)
     : userId(userId), movieId(movieId) {
-    if (s < 0.0 || s > 5.0) {
+    if (s < MIN_SCORE || s > MAX_SCORE) {
         std::cout << "Warning: Invalid score. Setting to 0.0" << std::endl;
         score = 0.0;
     } else {

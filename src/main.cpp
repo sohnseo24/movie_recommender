@@ -136,6 +136,13 @@ int main() {
 
                     // 3) 검색했을 때 사용자와 영화가 모두 존재하므로 평점 계산하여 등록
                     double score = std::stod(scoreStr); // 문자열을 double 타입으로 변환
+                    
+                    //숫자가 유효한 범위 내에 있는지 검증 방어선 구축 
+                    if (score < Movie::MIN_SCORE || score > Movie::MAX_SCORE) {
+                        std::cout << "평점은 " << Movie::MIN_SCORE << "에서 " 
+                                << Movie::MAX_SCORE << " 사이로 입력해 주세요.\n";
+                        break; // 평점 범위를 벗어나면 등록 프로세스를 즉시 탈출
+                    }
 
                     ratingMgr.addRating(Rating(u.getId(), m.getId(), score)); // 전체 평점 리스트에 기록
                     m.addRating(score); // 개별 영화의 평점 누적 연산

@@ -12,6 +12,10 @@ private:
     int         ratingCount;
 
 public:
+    //평점 시스템의 경계값을 static constexpr 상수로 추출
+    static constexpr double MIN_SCORE = 0.0;
+    static constexpr double MAX_SCORE = 5.0;
+
     Movie();
     Movie(int id, const std::string& title,
           const std::string& genre, int releaseYear);

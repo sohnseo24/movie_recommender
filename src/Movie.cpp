@@ -47,7 +47,7 @@ void Movie::setReleaseYear(int year) {
 }
 
 void Movie::addRating(double r) {
-    if (r >= 0.0 && r <= 5.0) {
+    if (r >= Movie::MIN_SCORE && r <= Movie::MAX_SCORE) {
         totalRating += r;
         ratingCount++;
     }

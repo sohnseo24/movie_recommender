@@ -28,7 +28,7 @@ vector<int> Recommender::findSimilarUsers(int targetUserId, int k){
         //유사도 계산(double타입으로)
         double sim= SimilarityCalculator::calculate(myRatings, otherRatings);
         //[엣지케이스 2번]: 공통영화가 없어 유사도 계산이 불가능한(-1.0)경우를 제외하기
-        if (sim >-1.0){//공통 영화가 있는 경우만 similarity벡터에 추가
+        if (sim >SimilarityCalculator::ERROR_NO_COMMON_MOVIES){//공통 영화가 있는 경우만 similarity벡터에 추가
             similarity.push_back({sim, otherId}); 
         }
     }

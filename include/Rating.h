@@ -8,6 +8,9 @@ private:
     double score;
 
 public:
+    static constexpr double MIN_SCORE = 0.0;
+    static constexpr double MAX_SCORE = 5.0;
+    
     Rating();
     Rating(int userId, int movieId, double score);
 

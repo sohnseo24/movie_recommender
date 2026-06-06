@@ -19,8 +19,8 @@ double SimilarityCalculator::calculate(
     }
     //공통 영화가 없으면 비교 자체가 불가능->매우 낮은 점수
     if(commonCount==0){
-        return -1.0; //공통영화가 없을 때 리턴값 -100에서 -1.0으로 확정수정(가중평균을 구하려면 소수점 단위의 숫자를 쳐야 정밀한 계산 가능)
+        return ERROR_NO_COMMON_MOVIES; 
     }
     //단순 유사도 공식
-    return commonCount*10-scoreDiffSum;
+    return commonCount*COMMON_MOVIE_WEIGHT-scoreDiffSum;
 }
