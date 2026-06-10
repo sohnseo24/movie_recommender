@@ -144,6 +144,8 @@ int main() {
                         break; // 평점 범위를 벗어나면 등록 프로세스를 즉시 탈출
                     }
 
+                    score = score * 2.0;
+
                     ratingMgr.addRating(Rating(u.getId(), m.getId(), score)); // 전체 평점 리스트에 기록
                     m.addRating(score); // 개별 영화의 평점 누적 연산
 
