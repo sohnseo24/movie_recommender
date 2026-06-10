@@ -59,20 +59,18 @@ int main() {
 
         //=======================================잘목된 입력 처리
 
-        std::string input; //일단 문자열(큰 범위)로 입력을 받을 것
-        if (!std::getline(std::cin, input)) break; //cin을 쓰면 입력 버퍼에 개행 문자가 남아 버퍼가 꼬여 getline사용
-        //사용자가 강제로 입력을 종료(Ctrl+Z 등)했을 때 프로그램이 강제로 멈추게 함.
+        std::string input; 
+        if (!std::getline(std::cin, input)) break; 
         if (input.empty()) continue; //사용자가 아무것도 입력하지 않고 엔터만 쳤을 때를 처리
 
         int choice;
         try {
-            choice = std::stoi(input);//try로 일단 이렇게 실행
+            choice = std::stoi(input);
         } catch (...) {
-            std::cout << "숫자만 입력해주세요.\n"; //stoi는 문자열을 정수로 변환하고 문자열이 아닌경우 예외 발생시킨다.
+            std::cout << "숫자만 입력해주세요.\n"; 
             continue;
         }
 
-        //=======================================여기서부터 진짜 시작
         if (choice == 0) { //0을 눌렀을 때 종료됨.
             std::cout << "프로그램을 종료합니다.\n";
             break;
@@ -82,11 +80,8 @@ int main() {
             case 1: {
                 std::string title, genre, yearStr;
                 std::cout << "제목: "; std::getline(std::cin, title); 
-                //getline을 사용하면 엔터 키가 남아서 생기는 문제를 예방할 뿐만아니라 공백이 있는 영화 제목도 받을 수 있음
                 std::cout << "장르: "; std::getline(std::cin, genre);
                 std::cout << "개봉연도: "; std::getline(std::cin, yearStr);
-                //int year; std::cin >> year; 이렇게 받으면 엔터가 버퍼에 남아 다음 영화를 입력받을 때 제목입력시 엔터를 받고 끝나버리기 때문에 
-                //getline(엔터까지 읽고 엔터까지 버퍼에서 삭제시켜주는)을 쓴 것.
                 movieMgr.addMovie(Movie(nextMovieId++, title, genre, std::stoi(yearStr)));//문자열로 받은 yearStr을 정수로 변환
                 std::cout << "영화가 추가되었습니다.\n";
                 break;
@@ -98,7 +93,7 @@ int main() {
                 try{  
                     Movie& m = movieMgr.findByTitle(title);
                     std::cout << m << std::endl; // 정상 출력
-                }catch(const std::out_of_range& e){//만약 영화가 없어서 함수가 예외를 throw하면 일로 점프하여 안전하게 처리
+                }catch(const std::out_of_range& e){//만약 영화가 없어서 함수가 예외를 throw하면 여기로 점프하여 안전하게 처리
                     std::cout << e.what() << std::endl;
                 }
                 break;
@@ -129,8 +124,7 @@ int main() {
                 std::cout << "평점(0~5): "; std::getline(std::cin, scoreStr);
 
                 try {
-                    // 2) [사용자 & 영화 검색] 2개 매니저 모두 참조자(&) 방식으로 수정 
-                    // 둘 중 하나라도 데이터가 없으면 즉시 해당 함수에서 예외(out_of_range)를 던져 catch 블록으로 순간이동
+                    // 2) [사용자 & 영화 검색] 2개 매니저 모두 참조자(&) 방식으로 수정:둘 중 하나라도 데이터가 없으면 즉시 해당 함수에서 예외(out_of_range)를 던져 catch 블록으로 순간이동
                     User& u = userMgr.findByName(userName);
                     Movie& m = movieMgr.findByTitle(movieTitle);
 
@@ -141,18 +135,17 @@ int main() {
                     if (score < Movie::MIN_SCORE || score > Movie::MAX_SCORE) {
                         std::cout << "평점은 " << Movie::MIN_SCORE << "에서 " 
                                 << Movie::MAX_SCORE << " 사이로 입력해 주세요.\n";
-                        break; // 평점 범위를 벗어나면 등록 프로세스를 즉시 탈출
+                        break; 
                     }
 
                     score = score * 2.0;
 
                     ratingMgr.addRating(Rating(u.getId(), m.getId(), score)); // 전체 평점 리스트에 기록
-                    m.addRating(score); // 개별 영화의 평점 누적 연산
+                    m.addRating(score); 
 
                     std::cout << "평점이 등록되었습니다.\n";
 
                 } catch (const std::out_of_range& e) {
-                    //사용자가 없든, 영화가 없든 간에 뱉어낸 예외 메시지(e.what())를 여기서 한방에 처리
                     std::cout << "등록실패: " << e.what() << std::endl;
                 } catch (const std::invalid_argument& e) {
                     // 혹시 사용자가 평점에 숫자가 아닌 'abc' 같은 걸 입력해 std::stod가 터졌을 때를 대비
@@ -196,7 +189,6 @@ int main() {
                     for (const auto& moviePtr : recommendations) {
                         if (moviePtr) {
                             std::cout << *moviePtr << std::endl; // 연산자 오버로딩 출력 (Moive.h)
-                            //*를 통해 주소를 들고 해당 주소에 위치한 실제 movie객체 원본에 접근해서 출력
                         }
                     }
                 }

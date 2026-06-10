@@ -14,8 +14,6 @@ public:
         : mm(movieMgr), um(userMgr), rm(ratingMgr) {} //생성자 초기화 리스트
 
     // 1. 메인 추천함수: 특정 유저에게 K명을 참고하여 N개의 영화 추천
-    // 가중 평균 알고리즘을 사용하여 N개의 영화 추천
-    // findSimilarUsers가 찾아준 K명을 바탕으로 후보 영화를 수집하고, 가중 평균 점수를 계산해 정렬 후 반환하는 로직
     std::vector<Movie*> recommend(int targetUserId, int k, int n);
 
 private:
@@ -25,7 +23,6 @@ private:
 
 
     // 2. 보조함수: 나와 가장 유사한 상위 K명의 사용자 ID를 찾아 반환
-    //(내 평점을 가져 온 후 날 제외하고 나머지 모든 사용자와 유사도 계산-> sort+람다를 사용해 유사도상위 K명 선택)
     std::vector<int> findSimilarUsers(int targetUserId, int k);
 
     //리팩토링 추가 구역

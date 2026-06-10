@@ -1,9 +1,9 @@
 #include "Rating.h"
 #include "RatingManager.h"
 #include <iostream>
-#include <fstream>   // ifstream 사용을 위해
-#include <sstream>   // stringstream 사용을 위해
-#include <string>    // string, stoi, stod 사용을 위해
+#include <fstream>   
+#include <sstream>   
+#include <string>    
 
 void RatingManager::addRating(const Rating& r) {
     ratings.push_back(r);
@@ -21,7 +21,7 @@ void RatingManager::printRatingsByMovie(int movieId) const {
     if (count == 0) std::cout << "해당 영화에 대한 평점이 없습니다." << std::endl;
 }
 
-void RatingManager::loadFromFile(const std::string& filename) { //CSV로딩을 위해 새로 추가
+void RatingManager::loadFromFile(const std::string& filename) { 
     std::ifstream file(filename);
 
     if (!file.is_open()) {
@@ -82,6 +82,6 @@ std::vector<Rating> RatingManager::findByUser(int userId) const {
     return userRatings;
 }
 
-int RatingManager::size() const{ //벡터의 크기 반환하는 함수 추가
+int RatingManager::size() const{ //벡터의 크기 반환하는 함수
     return ratings.size();
 }

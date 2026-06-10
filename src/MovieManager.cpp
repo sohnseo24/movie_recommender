@@ -2,10 +2,10 @@
 #include "MovieManager.h"
 #include <iostream>
 #include <algorithm>
-#include <fstream>   // ifstream 사용을 위해
-#include <sstream>   // stringstream 사용을 위해
-#include <string>    // string, stoi, stod 사용을 위해
-#include <numeric> // std::accumulate를 쓰기 위해 
+#include <fstream>   
+#include <sstream>   
+#include <string>    
+#include <numeric> 
 
 using namespace std;
 
@@ -48,7 +48,6 @@ Movie& MovieManager::findByTitle(const std::string& title) {
 }
 
 const Movie& MovieManager::findById(int movieId) const{//Recommender의 메인추천함수 recommend의 5단계:상위 n개의 영화반환을 위해서 추가함
-    // const 함수 내부라 원본을 지키기 위해 일단 const Movie&로 꺼내기
     for (const Movie& m: movies) {//movies(영화들 모아놓은 벡터)에서 movie(영화하나) 하나씩 꺼내서 
         if(m.getId()==movieId){
             return m; //(수정:예외처리) 

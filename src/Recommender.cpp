@@ -6,10 +6,10 @@
 using namespace std;
 
 vector<int> Recommender::findSimilarUsers(int targetUserId, int k){
-    //1) (유사도 , userId)쌍을 저장할 벡터 생성 (STL pair활용)
+    //1단계: (유사도 , userId)쌍을 저장할 벡터 생성 (STL pair활용)
     vector<pair<double, int>> similarity; //<first(=유사도), second(=Id)>임
 
-    //2) 내 평점 가져오기
+    //2단계: 내 평점 가져오기
     vector<Rating> myRatings = rm.findByUser(targetUserId);
     //[엣지케이스 1번]: 평점이 0개인 사용자->유사한 사용자 찾을 수 없음
     if (myRatings.empty()){
@@ -17,7 +17,7 @@ vector<int> Recommender::findSimilarUsers(int targetUserId, int k){
         return vector<int>(); //빈벡터 반환
     }
 
-    //3) 전체 사용자를 돌며 유사도 계산 (자기자신제외)
+    //3단계: 전체 사용자를 돌며 유사도 계산 (자기자신제외)
     const vector<User>& allUsers= um.getAllUsers();
     for(const auto& otherUser: allUsers){
         int otherId= otherUser.getId(); //otherId 저장
@@ -32,12 +32,12 @@ vector<int> Recommender::findSimilarUsers(int targetUserId, int k){
             similarity.push_back({sim, otherId}); 
         }
     }
-    //4) 정렬 + 람다식 활용 (내림차순 정렬)
+    //4단계: 정렬 + 람다식 활용 (내림차순 정렬)
     sort(similarity.begin(), similarity.end(),
     [](const pair<double, int>& a, const pair<double, int>& b){
         return a.first > b.first; //first(유사도)가 큰 순서대로
     });
-    //5) 상위 K명의 사용자 ID만 골라내서 반환
+    //5단계: 상위 K명의 사용자 ID만 골라내서 반환
     vector<int> topKUsers;
     for(size_t i=0; i< static_cast<size_t>(k) && i<similarity.size(); i++){ 
         //엣지 케이스 처리: k까지 해야하는데 similarity.size()가 k보다 작을 수도 있으니까 방지하기 위해서 &&로 조건 추가해줌

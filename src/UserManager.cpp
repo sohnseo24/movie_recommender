@@ -1,9 +1,9 @@
 #include "User.h"
 #include "UserManager.h"
 #include <iostream>
-#include <fstream>   // ifstream 사용을 위해
-#include <sstream>   // stringstream 사용을 위해
-#include <string>    // string, stoi, stod 사용을 위해
+#include <fstream>   
+#include <sstream>   
+#include <string>    
 
 // 5번: 사용자 추가
 void UserManager::addUser(const User& user) {
@@ -32,13 +32,12 @@ User& UserManager::findByName(const std::string& name) {
     }
 
     //nullptr 대신 명시적 예외 발생
-
     throw std::out_of_range("Error: '" + name + "' 해당 이름을 가진 사용자를 찾을 수 없습니다.");
 
 }
 
 //CSV를 위한 loadUser추가
-void UserManager::loadFromFile(const std::string& filename) { //CSV로딩을 위해 새로 추가
+void UserManager::loadFromFile(const std::string& filename) { 
     std::ifstream file(filename);
 
     if (!file.is_open()) {
